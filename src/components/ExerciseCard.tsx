@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { playCorrectSound, playIncorrectSound } from '../utils/soundEffects';
 
 export interface Exercise {
   id: string;
@@ -33,6 +33,14 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   const handleSubmit = () => {
     const answer = exercise.type === 'multiple-choice' ? selectedOption : userAnswer;
     const correct = answer.toLowerCase().trim() === exercise.answer.toLowerCase().trim();
+    
+    // Play sound effect
+    if (correct) {
+      playCorrectSound();
+    } else {
+      playIncorrectSound();
+    }
+    
     onAnswer(correct, answer);
   };
 
