@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,15 +31,25 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   const [userAnswer, setUserAnswer] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
 
+  // Reset state when exercise changes
+  useEffect(() => {
+    setUserAnswer('');
+    setSelectedOption('');
+  }, [exercise.id]);
+
   const handleSubmit = () => {
     const answer = exercise.type === 'multiple-choice' ? selectedOption : userAnswer;
     const correct = answer.toLowerCase().trim() === exercise.answer.toLowerCase().trim();
     
-    // Play sound effect
-    if (correct) {
-      playCorrectSound();
-    } else {
-      playIncorrectSound();
+    // Play sound effect with proper error handling
+    try {
+      if (correct) {
+        playCorrectSound();
+      } else {
+        playIncorrectSound();
+      }
+    } catch (error) {
+      console.log('Sound playback failed:', error);
     }
     
     onAnswer(correct, answer);
@@ -70,7 +81,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
           <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {exercise.options.map((option, index) => (
               <button
-                key={index}
+                key={`${exercise.id}-option-${index}`}
                 onClick={() => setSelectedOption(option)}
                 disabled={showResult}
                 className={`w-full p-5 text-left border-3 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
@@ -92,6 +103,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         ) : (
           <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <Input
+              key={exercise.id}
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               placeholder="Type je antwoord hier..."

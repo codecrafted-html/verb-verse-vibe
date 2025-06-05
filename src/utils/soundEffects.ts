@@ -1,52 +1,74 @@
 
 export const playCorrectSound = () => {
-  // Create correct answer sound (positive, uplifting)
-  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-  
-  // Play a pleasant chord progression
-  const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5
-  
-  frequencies.forEach((freq, index) => {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+  try {
+    // Create correct answer sound (Duolingo-style success)
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    // Resume context if suspended (required for some browsers)
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     
-    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-    oscillator.type = 'sine';
+    // Play uplifting melody - C major arpeggio
+    const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    const currentTime = audioContext.currentTime;
     
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-    
-    oscillator.start(audioContext.currentTime + index * 0.1);
-    oscillator.stop(audioContext.currentTime + 0.6);
-  });
+    frequencies.forEach((freq, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(freq, currentTime);
+      oscillator.type = 'sine';
+      
+      // Smooth volume envelope
+      gainNode.gain.setValueAtTime(0, currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.3, currentTime + index * 0.08 + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + index * 0.08 + 0.25);
+      
+      oscillator.start(currentTime + index * 0.08);
+      oscillator.stop(currentTime + index * 0.08 + 0.3);
+    });
+  } catch (error) {
+    console.log('Could not play correct sound:', error);
+  }
 };
 
 export const playIncorrectSound = () => {
-  // Create incorrect answer sound (descending, disappointed)
-  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-  
-  // Play a descending sequence
-  const frequencies = [440, 370, 310]; // A4, F#4, D#4
-  
-  frequencies.forEach((freq, index) => {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+  try {
+    // Create incorrect answer sound (Duolingo-style error)
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    // Resume context if suspended
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     
-    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-    oscillator.type = 'triangle';
+    // Play descending disappointed sound
+    const frequencies = [523.25, 466.16, 415.30]; // C5, Bb4, Ab4
+    const currentTime = audioContext.currentTime;
     
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.01);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-    
-    oscillator.start(audioContext.currentTime + index * 0.15);
-    oscillator.stop(audioContext.currentTime + 0.5);
-  });
+    frequencies.forEach((freq, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(freq, currentTime);
+      oscillator.type = 'sawtooth';
+      
+      // Disappointed volume envelope
+      gainNode.gain.setValueAtTime(0, currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.2, currentTime + index * 0.12 + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + index * 0.12 + 0.4);
+      
+      oscillator.start(currentTime + index * 0.12);
+      oscillator.stop(currentTime + index * 0.12 + 0.45);
+    });
+  } catch (error) {
+    console.log('Could not play incorrect sound:', error);
+  }
 };
