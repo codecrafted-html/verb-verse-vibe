@@ -35,7 +35,7 @@ const PathwayLesson: React.FC<PathwayLessonProps> = ({
 
   const getLessonIcon = () => {
     if (isSpecial) {
-      return <Crown className="w-8 h-8 text-yellow-500" />;
+      return <Crown className="w-8 h-8 text-green-500" />;
     }
     if (isCompleted) {
       return <CheckCircle className="w-8 h-8 text-white" />;
@@ -48,29 +48,29 @@ const PathwayLesson: React.FC<PathwayLessonProps> = ({
 
   const getButtonStyle = () => {
     if (isLocked) {
-      return 'bg-gray-300 border-gray-400 cursor-not-allowed';
+      return 'bg-gray-300 border-gray-400 cursor-not-allowed rounded-full';
     }
     if (isCompleted) {
-      return 'bg-green-500 border-green-600 hover:bg-green-600 shadow-lg animate-pulse';
+      return 'bg-green-500 border-green-600 hover:bg-green-600 shadow-lg animate-pulse rounded-full';
     }
     if (isCurrent) {
-      return 'bg-green-400 border-green-500 hover:bg-green-500 shadow-xl scale-110 animate-bounce';
+      return 'bg-green-400 border-green-500 hover:bg-green-500 shadow-xl scale-110 animate-bounce rounded-full';
     }
-    return 'bg-blue-500 border-blue-600 hover:bg-blue-600';
+    return 'bg-green-500 border-green-600 hover:bg-green-600 rounded-full';
   };
 
   return (
     <div className={`relative flex justify-center ${getPositionClass()}`}>
       {/* Connecting line to next lesson */}
       {!isSpecial && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-green-300 to-green-500 rounded-full" />
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-2 h-16 bg-gradient-to-b from-green-300 to-green-500 rounded-full" />
       )}
       
       <Button
         onClick={onStart}
         disabled={isLocked}
         className={`
-          w-16 h-16 rounded-full border-4 transition-all duration-300 transform hover:scale-105
+          w-20 h-20 border-4 transition-all duration-300 transform hover:scale-105
           ${getButtonStyle()}
           ${isCurrent ? 'animate-pulse' : ''}
         `}
@@ -80,8 +80,8 @@ const PathwayLesson: React.FC<PathwayLessonProps> = ({
       
       {/* Lesson number badge */}
       {!isSpecial && (
-        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-white rounded-full px-2 py-1 shadow-md border">
-          <span className="text-xs font-semibold text-gray-700">{lessonNumber}</span>
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-2xl px-3 py-2 shadow-md border-2 border-green-200">
+          <span className="text-sm font-semibold text-green-700">{lessonNumber}</span>
         </div>
       )}
     </div>
