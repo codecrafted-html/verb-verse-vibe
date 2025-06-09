@@ -23,13 +23,16 @@ export const useGameState = () => {
   });
 
   const loseHeart = useCallback(() => {
-    if (!gameState.hasInfiniteHearts) {
-      setGameState(prev => ({
-        ...prev,
-        hearts: Math.max(0, prev.hearts - 1)
-      }));
-    }
-  }, [gameState.hasInfiniteHearts]);
+    setGameState(prev => {
+      if (!prev.hasInfiniteHearts) {
+        return {
+          ...prev,
+          hearts: Math.max(0, prev.hearts - 1)
+        };
+      }
+      return prev;
+    });
+  }, []);
 
   const gainXP = useCallback((amount: number) => {
     setGameState(prev => ({
@@ -61,13 +64,16 @@ export const useGameState = () => {
   }, []);
 
   const restoreHeart = useCallback(() => {
-    if (!gameState.hasInfiniteHearts) {
-      setGameState(prev => ({
-        ...prev,
-        hearts: Math.min(5, prev.hearts + 1)
-      }));
-    }
-  }, [gameState.hasInfiniteHearts]);
+    setGameState(prev => {
+      if (!prev.hasInfiniteHearts) {
+        return {
+          ...prev,
+          hearts: Math.min(5, prev.hearts + 1)
+        };
+      }
+      return prev;
+    });
+  }, []);
 
   const activateCheat = useCallback(() => {
     setGameState(prev => ({
