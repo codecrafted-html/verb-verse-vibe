@@ -6,6 +6,9 @@ interface GameState {
   streak: number;
   xp: number;
   currentLesson: number;
+  hasInfiniteHearts: boolean;
+  completedLevels: number;
+  hasExtraLevels: boolean;
 }
 
 export const useGameState = () => {
@@ -13,15 +16,20 @@ export const useGameState = () => {
     hearts: 5,
     streak: 0,
     xp: 0,
-    currentLesson: 1
+    currentLesson: 1,
+    hasInfiniteHearts: false,
+    completedLevels: 0,
+    hasExtraLevels: false
   });
 
   const loseHeart = useCallback(() => {
-    setGameState(prev => ({
-      ...prev,
-      hearts: Math.max(0, prev.hearts - 1)
-    }));
-  }, []);
+    if (!gameState.hasInfiniteHearts) {
+      setGameState(prev => ({
+        ...prev,
+        hearts: Math.max(0, prev.hearts - 1)
+      }));
+    }
+  }, [gameState.hasInfiniteHearts]);
 
   const gainXP = useCallback((amount: number) => {
     setGameState(prev => ({
@@ -47,14 +55,26 @@ export const useGameState = () => {
   const nextLesson = useCallback(() => {
     setGameState(prev => ({
       ...prev,
-      currentLesson: prev.currentLesson + 1
+      currentLesson: prev.currentLesson + 1,
+      completedLevels: prev.completedLevels + 1
     }));
   }, []);
 
   const restoreHeart = useCallback(() => {
+    if (!gameState.hasInfiniteHearts) {
+      setGameState(prev => ({
+        ...prev,
+        hearts: Math.min(5, prev.hearts + 1)
+      }));
+    }
+  }, [gameState.hasInfiniteHearts]);
+
+  const activateCheat = useCallback(() => {
     setGameState(prev => ({
       ...prev,
-      hearts: Math.min(5, prev.hearts + 1)
+      hasInfiniteHearts: true,
+      hasExtraLevels: true,
+      hearts: 5
     }));
   }, []);
 
@@ -65,6 +85,7 @@ export const useGameState = () => {
     incrementStreak,
     resetStreak,
     nextLesson,
-    restoreHeart
+    restoreHeart,
+    activateCheat
   };
 };

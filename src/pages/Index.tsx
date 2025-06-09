@@ -8,19 +8,20 @@ import { verbs } from '../data/verbs';
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
-  const { gameState } = useGameState();
+  const { gameState, activateCheat } = useGameState();
 
   const verbsPerLesson = 10;
   const totalLessons = Math.ceil(verbs.length / verbsPerLesson);
+  const extraLessons = gameState.hasExtraLevels ? 20 : 0; // Add 20 extra levels when cheat is active
 
-  const lessons = Array.from({ length: totalLessons }, (_, i) => {
+  const lessons = Array.from({ length: totalLessons + extraLessons }, (_, i) => {
     const lessonNumber = i + 1;
     return {
       number: lessonNumber,
       isLocked: lessonNumber > gameState.currentLesson + 1,
       isCompleted: lessonNumber < gameState.currentLesson,
       isCurrent: lessonNumber === gameState.currentLesson,
-      isSpecial: lessonNumber % 5 === 0, // Every 5th lesson is special
+      isSpecial: lessonNumber % 5 === 0,
       position: (i % 3 === 0) ? 'center' : (i % 3 === 1) ? 'left' : 'right'
     };
   });
@@ -33,7 +34,14 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-green-50 to-yellow-50">
-      <Header hearts={gameState.hearts} streak={gameState.streak} xp={gameState.xp} />
+      <Header 
+        hearts={gameState.hearts} 
+        streak={gameState.streak} 
+        xp={gameState.xp}
+        hasInfiniteHearts={gameState.hasInfiniteHearts}
+        completedLevels={gameState.completedLevels}
+        onCheatActivated={activateCheat}
+      />
       
       <div className="container mx-auto px-4 py-8">
         {/* Stats section */}
@@ -96,6 +104,11 @@ const Index: React.FC = () => {
             <div className="text-gray-600">
               Oefen vandaag om je {gameState.streak} dagen streak te behouden
             </div>
+            {gameState.hasExtraLevels && (
+              <div className="mt-3 text-purple-600 font-semibold">
+                ✨ Extra levels ontgrendeld!
+              </div>
+            )}
           </div>
         </div>
       </div>

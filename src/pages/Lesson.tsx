@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -13,7 +12,7 @@ import { ArrowLeft } from 'lucide-react';
 const Lesson: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const { gameState, loseHeart, gainXP, incrementStreak, resetStreak, nextLesson } = useGameState();
+  const { gameState, loseHeart, gainXP, incrementStreak, resetStreak, nextLesson, activateCheat } = useGameState();
   
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -71,10 +70,17 @@ const Lesson: React.FC = () => {
     setShowResult(false);
   };
 
-  if (gameState.hearts === 0) {
+  if (gameState.hearts === 0 && !gameState.hasInfiniteHearts) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header hearts={gameState.hearts} streak={gameState.streak} xp={gameState.xp} />
+        <Header 
+          hearts={gameState.hearts} 
+          streak={gameState.streak} 
+          xp={gameState.xp}
+          hasInfiniteHearts={gameState.hasInfiniteHearts}
+          completedLevels={gameState.completedLevels}
+          onCheatActivated={activateCheat}
+        />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-red-600 mb-4">Geen levens meer!</h2>
@@ -91,7 +97,14 @@ const Lesson: React.FC = () => {
   if (isLessonComplete) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header hearts={gameState.hearts} streak={gameState.streak} xp={gameState.xp} />
+        <Header 
+          hearts={gameState.hearts} 
+          streak={gameState.streak} 
+          xp={gameState.xp}
+          hasInfiniteHearts={gameState.hasInfiniteHearts}
+          completedLevels={gameState.completedLevels}
+          onCheatActivated={activateCheat}
+        />
         <div className="container mx-auto px-4 py-8 flex items-center justify-center">
           <LessonComplete
             score={score}
@@ -108,7 +121,14 @@ const Lesson: React.FC = () => {
   if (exercises.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header hearts={gameState.hearts} streak={gameState.streak} xp={gameState.xp} />
+        <Header 
+          hearts={gameState.hearts} 
+          streak={gameState.streak} 
+          xp={gameState.xp}
+          hasInfiniteHearts={gameState.hasInfiniteHearts}
+          completedLevels={gameState.completedLevels}
+          onCheatActivated={activateCheat}
+        />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">Laden...</div>
         </div>
@@ -120,7 +140,14 @@ const Lesson: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header hearts={gameState.hearts} streak={gameState.streak} xp={gameState.xp} />
+      <Header 
+        hearts={gameState.hearts} 
+        streak={gameState.streak} 
+        xp={gameState.xp}
+        hasInfiniteHearts={gameState.hasInfiniteHearts}
+        completedLevels={gameState.completedLevels}
+        onCheatActivated={activateCheat}
+      />
       
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
