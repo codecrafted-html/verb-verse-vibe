@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface GameState {
   hearts: number;
@@ -11,8 +11,19 @@ interface GameState {
   hasExtraLevels: boolean;
 }
 
-export const useGameState = () => {
-  const [gameState, setGameState] = useState<GameState>({
+const STORAGE_KEY = 'irregular-verbs-game-state';
+
+const getInitialGameState = (): GameState => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (error) {
+    console.log('Failed to load saved game state:', error);
+  }
+  
+  return {
     hearts: 5,
     streak: 0,
     xp: 0,
@@ -20,7 +31,20 @@ export const useGameState = () => {
     hasInfiniteHearts: false,
     completedLevels: 0,
     hasExtraLevels: false
-  });
+  };
+};
+
+export const useGameState = () => {
+  const [gameState, setGameState] = useState<GameState>(getInitialGameState);
+
+  // Save to localStorage whenever gameState changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+    } catch (error) {
+      console.log('Failed to save game state:', error);
+    }
+  }, [gameState]);
 
   const loseHeart = useCallback(() => {
     setGameState(prev => {
