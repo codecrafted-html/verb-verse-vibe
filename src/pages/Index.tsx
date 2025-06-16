@@ -3,12 +3,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import PathwayLesson from '../components/PathwayLesson';
-import { useGameState } from '../hooks/useGameState';
+import { useSupabaseGameState } from '../hooks/useSupabaseGameState';
 import { verbs } from '../data/verbs';
 
 const Index: React.FC = () => {
   const navigate = useNavigate();
-  const { gameState, activateCheat } = useGameState();
+  const { gameState, activateCheat } = useSupabaseGameState();
 
   const verbsPerLesson = 10;
   const totalLessons = Math.ceil(verbs.length / verbsPerLesson);

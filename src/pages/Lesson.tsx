@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import ExerciseCard, { Exercise } from '../components/ExerciseCard';
 import ProgressBar from '../components/ProgressBar';
 import LessonComplete from '../components/LessonComplete';
-import { useGameState } from '../hooks/useGameState';
+import { useSupabaseGameState } from '../hooks/useSupabaseGameState';
 import { generateLessonExercises } from '../utils/exerciseGenerator';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -12,7 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 const Lesson: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const { gameState, loseHeart, gainXP, incrementStreak, resetStreak, nextLesson, activateCheat } = useGameState();
+  const { gameState, loseHeart, gainXP, incrementStreak, resetStreak, nextLesson, activateCheat } = useSupabaseGameState();
   
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);

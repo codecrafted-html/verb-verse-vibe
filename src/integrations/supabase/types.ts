@@ -9,13 +9,67 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          created_at: string
+          id: string
+          total_xp: number
+          updated_at: string
+          user_id: string
+          username: string
+          week_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+          username: string
+          week_start: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+          username?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_week_start: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      update_user_xp: {
+        Args: { xp_to_add: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
