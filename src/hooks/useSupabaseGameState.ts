@@ -83,9 +83,11 @@ export const useSupabaseGameState = () => {
       xp: prev.xp + amount
     }));
     
-    // Sync to Supabase
-    syncXPToSupabase(amount);
-  }, [syncXPToSupabase]);
+    // Sync to Supabase only if user is logged in
+    if (user) {
+      syncXPToSupabase(amount);
+    }
+  }, [syncXPToSupabase, user]);
 
   const incrementStreak = useCallback(() => {
     setGameState(prev => ({

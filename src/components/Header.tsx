@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, Flame, Trophy, Infinity as InfinityIcon, Users, LogOut } from 'lucide-react';
+import { Heart, Flame, Trophy, Infinity as InfinityIcon, Users, LogOut, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -24,10 +24,14 @@ const Header: React.FC<HeaderProps> = ({
   onCheatActivated 
 }) => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
+    navigate('/');
+  };
+
+  const handleSignIn = () => {
     navigate('/auth');
   };
 
@@ -87,15 +91,27 @@ const Header: React.FC<HeaderProps> = ({
             <span className="hidden sm:inline">Leaderboard</span>
           </Button>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleSignOut}
-            className="flex items-center space-x-1 text-red-600 hover:text-red-700"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline">Uitloggen</span>
-          </Button>
+          {user ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSignOut}
+              className="flex items-center space-x-1 text-red-600 hover:text-red-700"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Uitloggen</span>
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSignIn}
+              className="flex items-center space-x-1 text-green-600 hover:text-green-700"
+            >
+              <LogIn className="w-4 h-4" />
+              <span className="hidden sm:inline">Inloggen</span>
+            </Button>
+          )}
         </div>
       </div>
     </header>
