@@ -62,10 +62,13 @@ export const generateSentenceExercise = (verb: Verb): Exercise => {
   const sentence = verb.sentences[targetForm];
   const answer = verb[targetForm];
 
+  // Replace the placeholder with a blank (_____)
+  const questionWithBlank = sentence.replace('_____', '_____');
+
   return {
     id: `sentence-${verb.base}-${targetForm}`,
     type: 'sentence-complete',
-    question: sentence,
+    question: questionWithBlank,
     answer,
     explanation: `In deze zin moet je de ${getFormName(targetForm)} gebruiken: ${answer}`
   };
