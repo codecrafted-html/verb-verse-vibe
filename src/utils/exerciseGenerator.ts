@@ -64,11 +64,14 @@ export const generateSentenceExercise = (verb: Verb): Exercise => {
 
   // Replace the verb form in the sentence with a blank
   const questionWithBlank = sentence.replace(answer, '_____');
+  
+  // Show the base form as a hint, not the answer
+  const questionWithHint = `${questionWithBlank} (${verb.base})`;
 
   return {
     id: `sentence-${verb.base}-${targetForm}`,
     type: 'sentence-complete',
-    question: questionWithBlank,
+    question: questionWithHint,
     answer,
     explanation: `In deze zin moet je de ${getFormName(targetForm)} gebruiken: ${answer}`
   };
